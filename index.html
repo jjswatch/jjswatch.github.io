@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Good Deal</title>
+<link rel="stylesheet" href="css/style.css" />
+
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Microsoft JhengHei", sans-serif;
+	background: #ffffff;
+	color: #333;
+}
+
+/* 導覽列 */
+nav {
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.nav-container {
+	max-width: 1100px;
+	margin: auto;
+	padding: 12px 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.nav-links {
+	display: flex;
+	gap: 24px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-links a {
+	text-decoration: none;
+	color: #333;
+	font-size: 16px;
+}
+
+/* 手機選單 */
+.hamburger {
+	display: none;
+	font-size: 26px;
+	cursor: pointer;
+}
+
+@media ( max-width : 768px) {
+	.nav-links {
+		display: none;
+		flex-direction: column;
+		background: #fff;
+		position: absolute;
+		top: 60px;
+		right: 20px;
+		width: 160px;
+		border: 1px solid #eee;
+		border-radius: 10px;
+		padding: 10px;
+	}
+	.nav-links.active {
+		display: flex;
+	}
+	.hamburger {
+		display: block;
+	}
+}
+
+/* Hero 區 */
+.hero {
+	text-align: center;
+	padding: 40px 20px;
+	background: #f7f7f7;
+}
+
+.hero h1 {
+	font-size: 32px;
+	margin-bottom: 10px;
+}
+
+.hero p {
+	font-size: 16px;
+	color: #666;
+	margin-bottom: 20px;
+}
+
+.search-box {
+	margin: 0 auto;
+	margin-top: 20px;
+	display: flex;
+	gap: 10px;
+	max-width: 480px;
+	padding: 0 20px;
+}
+
+.search-box input {
+	flex: 1;
+	padding: 14px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	font-size: 16px;
+}
+
+.search-box button {
+	padding: 14px 20px;
+	border: none;
+	background: black;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: 0.2s;
+}
+
+.search-box button:hover {
+	background: #333;
+}
+
+.category-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.category-tag {
+	padding: 8px 14px;
+	background: #f2f2f2;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 15px;
+	transition: 0.2s;
+}
+
+.category-tag:hover {
+	background: #ddd;
+}
+
+/* 功能區 */
+.features {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 20px;
+	padding: 40px 20px;
+	max-width: 1000px;
+	margin: auto;
+}
+
+.card {
+	background: white;
+	padding: 20px;
+	border-radius: 14px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+	text-align: center;
+}
+
+.store-card-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	gap: 20px;
+}
+
+.store-card {
+	border-radius: 18px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	transition: .25s;
+	background: white;
+}
+
+.store-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* 上半部背景（品牌 Logo 填滿） */
+.store-card-top {
+	height: 120px;
+	background-size: cover;
+	background-position: center;
+	/*position: relative;*/
+}
+
+/* 加上淡化遮罩讓文字更清楚
+.store-card-top::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(2px);
+}
+*/
+
+/* 下半部：品牌名稱 */
+.store-card-bottom {
+	padding: 12px;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+}
+
+/* 熱門推薦 */
+.section-title {
+	text-align: center;
+	font-size: 24px;
+	margin-top: 30px;
+	font-weight: bold;
+}
+
+.hot-items {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 20px;
+	padding: 20px;
+	max-width: 1000px;
+	margin: auto;
+}
+
+.hot-items .item img {
+	width: 140px; /* 固定寬度 */
+	height: 140px; /* 固定高度 */
+	object-fit: cover; /* 保持比例裁切 */
+	border-radius: 10px; /* 可加可不加 */
+	display: block;
+	margin: 0 auto;
+}
+
+.hot-items .item {
+	text-align: center;
+}
+
+/* Footer */
+footer {
+	text-align: center;
+	padding: 20px;
+	margin-top: 40px;
+	font-size: 14px;
+	color: #777;
+	border-top: 1px solid #eee;
+}
+</style>
+</head>
+
+<body>
+
+	<!-- 導覽列 -->
+	<nav>
+		<div class="nav-container">
+			<div class="logo">Good Deal</div>
+
+			<div class="hamburger" onclick="toggleMenu()">☰</div>
+
+			<ul class="nav-links" id="navMenu">
+				<li><a href="index.html">首頁</a></li>
+				<li><a href="#hot">熱門商品</a></li>
+				<li><a href="#fav">我的收藏</a></li>
+				<li><a href="#login">登入</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<section class="hero">
+		<h1>快速找到最便宜的商品價格</h1>
+		<p>整合全台主要量販店，每日更新價格資訊，幫你省時又省錢。</p>
+
+		<div class="search-box">
+			<input id="keyword" type="text" placeholder="輸入商品名稱">
+			<button onclick="openScanner()">📷 掃碼</button>
+			<button onclick="goSearch()">搜尋</button>
+		</div>
+	</section>
+
+	<div id="scanner" style="display: none; padding: 20px;">
+		<div id="qr-reader" style="width: 300px; margin: auto;"></div>
+		<button onclick="closeScanner()">關閉</button>
+	</div>
+
+
+	<section class="features">
+		<div class="card">
+			<h3>🔍 即時搜尋</h3>
+			<p>快速查詢商品價格資訊。</p>
+		</div>
+
+		<div class="card">
+			<h3>📊 價格比較</h3>
+			<p>自動比對各平台價格。</p>
+		</div>
+
+		<div class="card">
+			<h3>⭐ 收藏商品</h3>
+			<p>追蹤價格變化，不錯過降價時機。</p>
+		</div>
+	</section>
+
+	<h2 class="section-title">🏬 店家搜尋</h2>
+	<section style="padding: 20px; max-width: 1100px; margin: auto;">
+		<div id="store-cards" class="store-card-container"></div>
+	</section>
+
+
+	<!-- 分類標籤區 -->
+	<h2 class="section-title">🏬 分類搜尋</h2>
+	<section style="padding: 20px; max-width: 1100px; margin: auto;">
+		<div id="category-tags" class="category-tags"></div>
+	</section>
+
+	<h2 class="section-title" id="hot">🔥 熱門商品</h2>
+	<section class="hot-items">
+		<div class="item">
+			<img src="assets/placeholder.png" alt="商品1">
+			<p>可口可樂 2L</p>
+		</div>
+		<div class="item">
+			<img src="assets/placeholder.png" alt="商品2">
+			<p>統一布丁 6入</p>
+		</div>
+		<div class="item">
+			<img src="assets/placeholder.png" alt="商品3">
+			<p>衛生紙 家庭號</p>
+		</div>
+	</section>
+
+	<footer> © 2025 商品比價平台 GoodDeal </footer>
+
+	<script>
+async function loadCategories() {
+    const res = await fetch("/api/categories");
+    const categories = await res.json();
+
+    const container = document.getElementById("category-tags");
+    container.innerHTML = "";
+
+    // 建立分類標籤（來自資料庫）
+    categories.forEach(cat => {
+        const tag = document.createElement("div");
+        tag.className = "category-tag";
+        tag.dataset.id = cat.categoryId;        // ← 正確
+        tag.innerText = cat.categoryName;       // ← 正確
+        tag.onclick = () => selectCategory(cat.categoryId);
+        container.appendChild(tag);
+    });
+}
+
+function selectCategory(id) {
+    // 標籤切換樣式
+    document.querySelectorAll(".category-tag").forEach(t => t.classList.remove("active"));
+    document.querySelector(`.category-tag[data-id="${id}"]`).classList.add("active");
+
+    const keyword = document.getElementById("keyword").value;
+
+    window.location.href = `search.html?q=${keyword}&cat=${id}`;
+}
+
+function goSearch() {
+    const key = document.getElementById("keyword").value;
+    const selected = document.querySelector(".category-tag.active")?.dataset.id || "";
+
+    window.location.href = `search.html?q=${key}&cat=${selected}`;
+}
+
+function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("active");
+}
+
+loadCategories();
+
+const stores = [
+    {
+        id: 1,
+        name: "全聯福利中心",
+        logo: "assets/stores/px.png"
+    },
+    {
+        id: 2,
+        name: "家樂福",
+        logo: "assets/stores/carrefour.png"
+    },
+    {
+        id: 3,
+        name: "大潤發",
+        logo: "assets/stores/rt.png"
+    }
+];
+
+function loadStores() {
+    const container = document.getElementById("store-cards");
+    container.innerHTML = "";
+
+    stores.forEach(store => {
+        const card = document.createElement("div");
+        card.className = "store-card";
+        card.onclick = () => goStore(store.id);
+
+        card.innerHTML = `
+            <div class="store-card-top"
+                 style="background-image:url('${store.logo}')">
+            </div>
+            <div class="store-card-bottom">${store.name}</div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function goStore(storeId) {
+    // 跳到該店家商品搜尋
+    window.location.href = `search.html?store=${storeId}`;
+}
+
+// 初始化
+loadStores();
+
+//掃碼視窗開啟
+async function openScanner() {
+  const scannerEl = document.getElementById("barcode-scanner");
+  scannerEl.style.display = "flex";
+
+  // 建立掃描器
+  const html5QrCode = new Html5Qrcode("qr-reader");
+
+  // 使用後鏡頭（facingMode: environment）掃描
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },   // 可調整 fps 或 qrbox 尺寸
+    (decodedText, decodedResult) => {
+      // 掃到字串後，將條碼放入搜尋框，並立即停止掃描與關閉視窗
+      document.getElementById("keyword").value = decodedText;
+
+      html5QrCode.stop().then(() => {
+        // 停止相機
+        scannerEl.style.display = "none";
+        goSearch();  // 直接跳轉到搜尋頁
+      }).catch(err => {
+        console.warn("停止掃描失敗:", err);
+        scannerEl.style.display = "none";
+      });
+    },
+    errorMessage => {
+      // 可以在這裡顯示掃描過程中的錯誤或提示，但通常可忽略
+      // console.log("掃描中錯誤: ", errorMessage);
+    }
+  ).catch(err => {
+    console.error("相機啟動失敗:", err);
+    alert("無法啟動相機掃描，請確認是否允許使用相機。");
+    scannerEl.style.display = "none";
+  });
+}
+
+// 關閉掃描視窗
+function closeScanner() {
+  // 重新載入或強制關閉視窗即可，這裡選擇重新載入整頁簡單處理
+  location.reload();
+}
+</script>
+	<!-- 條碼掃描視窗，預設隱藏 -->
+	<div id="barcode-scanner"
+		style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center;">
+		<div
+			style="position: relative; width: 100%; max-width: 360px; margin: auto; padding: 20px; background: #fff; border-radius: 12px; text-align: center;">
+			<div id="qr-reader" style="width: 100%;"></div>
+			<button onclick="closeScanner()"
+				style="margin-top: 12px; padding: 8px 16px; border: none; background: #333; color: #fff; border-radius: 8px;">關閉</button>
+		</div>
+	</div>
+
+	<!-- 引入條碼掃描庫 -->
+	<script src="https://unpkg.com/html5-qrcode"></script>
+</body>
+</html>
