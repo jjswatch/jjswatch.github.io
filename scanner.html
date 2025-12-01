@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 網頁條碼/QR Code 掃描器</title>
+    
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f4f7f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #qr-reader {
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        #qr-result {
+            margin-top: 20px;
+            padding: 15px;
+            min-height: 50px;
+            background-color: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 4px;
+            text-align: left;
+        }
+        #qr-result b {
+            font-weight: bold;
+            color: #0050b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📸 網頁條碼掃描器 (HTML/JS)</h2>
+    <p>請點擊下方的「啟動掃描」按鈕，並授予瀏覽器相機使用權限。</p>
+
+    <div id="qr-reader"></div>
+
+    <div id="qr-result">
+        <b>狀態:</b> 等待啟動...
+    </div>
+</div>
+
+<script>
+    // 1. 取得掃描顯示容器的 ID
+    const html5QrCode = new Html5Qrcode("qr-reader");
+
+    // 2. 定義掃描成功時的處理函式
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        // 解碼成功後，更新結果顯示區
+        const resultElement = document.getElementById('qr-result');
+        resultElement.innerHTML = `
+            <b>✅ 掃描成功結果:</b> ${decodedText}
+            <br>
+            <b>條碼類型:</b> ${decodedResult.result.format.formatName}
+        `;
+        resultElement.style.backgroundColor = '#f6ffed';
+        resultElement.style.borderColor = '#b7eb8f';
+
+        // (可選) 停止相機，避免持續掃描
+        html5QrCode.stop().then(ignore => {
+            console.log("掃描成功，相機已停止。");
+        }).catch(err => {
+            console.error("停止相機時發生錯誤:", err);
+        });
+    };
+
+    // 3. 定義掃描設定
+    const config = {
+        fps: 10,                 // 每秒掃描幀數 (Frames per second)
+        qrbox: { width: 250, height: 250 }, // 掃描框大小 (只影響 UI 顯示，但可引導使用者)
+        // 僅解碼 QR Code 和 EAN_13 條碼 (可根據需求調整)
+        formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.CODE_128 
+        ]
+    };
+
+    // 4. 啟動相機掃描
+    html5QrCode.start(
+        { facingMode: "environment" }, // 使用後置鏡頭 ("user" 為前置鏡頭)
+        config, 
+        qrCodeSuccessCallback,
+        // 定義錯誤處理函式 (例如無法取得相機權限)
+        (errorMessage) => { 
+            // 掃描過程中持續觸發，通常用於調試，一般可忽略
+        }
+    ).catch(err => {
+        // 處理無法啟動相機的錯誤 (例如使用者拒絕授權或設備無相機)
+        document.getElementById('qr-result').innerHTML = `
+            <b>❌ 啟動錯誤:</b> ${err}
+            <br>
+            <span style="color:red;">請確認您已授予瀏覽器使用相機的權限。此功能通常需要在支援相機的裝置上運作。</span>
+        `;
+        document.getElementById('qr-result').style.backgroundColor = '#fff2f0';
+        document.getElementById('qr-result').style.borderColor = '#ff4d4f';
+    });
+
+</script>
+
+</body>
+</html>
