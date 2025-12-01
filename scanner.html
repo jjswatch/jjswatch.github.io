@@ -57,62 +57,68 @@
 </div>
 
 <script>
-    // 1. 取得掃描顯示容器的 ID
-    const html5QrCode = new Html5Qrcode("qr-reader");
+    const resultElement = document.getElementById('qr-result');
+    const qrReaderId = "qr-reader";
 
-    // 2. 定義掃描成功時的處理函式
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        // 解碼成功後，更新結果顯示區
-        const resultElement = document.getElementById('qr-result');
-        resultElement.innerHTML = `
-            <b>✅ 掃描成功結果:</b> ${decodedText}
-            <br>
-            <b>條碼類型:</b> ${decodedResult.result.format.formatName}
-        `;
-        resultElement.style.backgroundColor = '#f6ffed';
-        resultElement.style.borderColor = '#b7eb8f';
+    // 檢查是否有可用的相機
+    Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+            // 找到相機
+            resultElement.innerHTML = `<b>相機狀態:</b> 找到 ${devices.length} 個相機。正在嘗試啟動...`;
 
-        // (可選) 停止相機，避免持續掃描
-        html5QrCode.stop().then(ignore => {
-            console.log("掃描成功，相機已停止。");
-        }).catch(err => {
-            console.error("停止相機時發生錯誤:", err);
-        });
-    };
+            // 選取後置鏡頭 (facingMode: "environment") 或第一個偵測到的相機 ID
+            let cameraId = devices.find(device => device.label.toLowerCase().includes('back'))
+                           ? { facingMode: "environment" } // 嘗試使用後置
+                           : devices[0].id; // 否則使用第一個相機的 ID
 
-    // 3. 定義掃描設定
-    const config = {
-        fps: 10,                 // 每秒掃描幀數 (Frames per second)
-        qrbox: { width: 250, height: 250 }, // 掃描框大小 (只影響 UI 顯示，但可引導使用者)
-        // 僅解碼 QR Code 和 EAN_13 條碼 (可根據需求調整)
-        formatsToSupport: [
-            Html5QrcodeSupportedFormats.QR_CODE,
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.CODE_128 
-        ]
-    };
+            const html5QrCode = new Html5Qrcode(qrReaderId);
+            
+            const config = { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                // 減少格式數量，有時可提高初始化速度
+                formatsToSupport: [
+                    Html5QrcodeSupportedFormats.QR_CODE,
+                    Html5QrcodeSupportedFormats.EAN_13
+                ]
+            };
 
-    // 4. 啟動相機掃描
-    html5QrCode.start(
-        { facingMode: "environment" }, // 使用後置鏡頭 ("user" 為前置鏡頭)
-        config, 
-        qrCodeSuccessCallback,
-        // 定義錯誤處理函式 (例如無法取得相機權限)
-        (errorMessage) => { 
-            // 掃描過程中持續觸發，通常用於調試，一般可忽略
+            html5QrCode.start(
+                cameraId, // 傳入選取的相機 ID 或 facingMode
+                config, 
+                (decodedText, decodedResult) => {
+                    // 掃描成功處理...
+                    resultElement.innerHTML = `<b>✅ 掃描成功結果:</b> ${decodedText}<br><b>條碼類型:</b> ${decodedResult.result.format.formatName}`;
+                    html5QrCode.stop();
+                },
+                (errorMessage) => { /* 掃描過程中的錯誤，通常忽略 */ }
+            ).catch(err => {
+                // 啟動失敗
+                resultElement.innerHTML = `
+                    <b>❌ 啟動相機失敗:</b> ${err}
+                    <br>
+                    <span style="color:red;">請檢查手機相機權限和設備是否支援。</span>
+                `;
+                resultElement.style.backgroundColor = '#fff2f0';
+                resultElement.style.borderColor = '#ff4d4f';
+            });
+
+        } else {
+            // 未找到任何相機
+            resultElement.innerHTML = '<b>❌ 錯誤:</b> 在此設備上未偵測到任何可用的相機。';
         }
-    ).catch(err => {
-        // 處理無法啟動相機的錯誤 (例如使用者拒絕授權或設備無相機)
-        document.getElementById('qr-result').innerHTML = `
-            <b>❌ 啟動錯誤:</b> ${err}
+    }).catch(err => {
+        // 獲取相機列表時失敗 (通常是因為權限被拒絕或 API 不支援)
+        resultElement.innerHTML = `
+            <b>❌ 致命錯誤:</b> 無法存取相機設備。錯誤代碼: ${err.name}
             <br>
-            <span style="color:red;">請確認您已授予瀏覽器使用相機的權限。此功能通常需要在支援相機的裝置上運作。</span>
+            <span style="color:red;">請確認瀏覽器已授予相機權限。</span>
         `;
-        document.getElementById('qr-result').style.backgroundColor = '#fff2f0';
-        document.getElementById('qr-result').style.borderColor = '#ff4d4f';
+        resultElement.style.backgroundColor = '#fff2f0';
+        resultElement.style.borderColor = '#ff4d4f';
     });
-
 </script>
 
 </body>
+
 </html>
