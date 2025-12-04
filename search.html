@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>搜尋結果</title>
+
+<style>
+body {
+	font-family: "Microsoft JhengHei", sans-serif;
+	background: #ffffff;
+	margin: 0;
+	padding: 0;
+	color: #333;
+}
+
+/* 導覽列 */
+nav {
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.nav-container {
+	max-width: 1100px;
+	margin: auto;
+	padding: 12px 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.nav-links {
+	display: flex;
+	gap: 24px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-links a {
+	text-decoration: none;
+	color: #333;
+	font-size: 16px;
+}
+
+/* 手機選單 */
+.hamburger {
+	display: none;
+	font-size: 26px;
+	cursor: pointer;
+}
+
+@media ( max-width : 768px) {
+	.nav-links {
+		display: none;
+		flex-direction: column;
+		background: #fff;
+		position: absolute;
+		top: 60px;
+		right: 20px;
+		width: 160px;
+		border: 1px solid #eee;
+		border-radius: 10px;
+		padding: 10px;
+	}
+	.nav-links.active {
+		display: flex;
+	}
+	.hamburger {
+		display: block;
+	}
+	#resultList {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* Hero 區 */
+.hero {
+	text-align: center;
+	padding: 20px 20px;
+	background: #f7f7f7;
+}
+
+.hero h2 {
+	text-align: center;
+	font-size: 26px;
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+
+/* Search Bar — 與首頁一致 */
+.search-box {
+	margin: 0 auto;
+	margin-top: 20px;
+	display: flex;
+	gap: 10px;
+	max-width: 480px;
+	padding: 0 20px;
+}
+
+.search-box input {
+	flex: 1;
+	padding: 14px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	font-size: 16px;
+}
+
+.search-box button {
+	padding: 14px 20px;
+	border: none;
+	background: black;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: 0.2s;
+}
+
+.search-box button:hover {
+	background: #333;
+}
+
+/* 商品結果區塊卡片 — 改成跟首頁一樣的卡片風格 */
+#resultList {
+	list-style: none;
+	padding: 0;
+	margin: 20px auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: 20px;
+	max-width: 1000px;
+}
+
+.item {
+	background: white;
+	padding: 16px;
+	border-radius: 14px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+	text-align: center;
+}
+
+/* 商品圖片固定尺寸 — 與首頁熱門商品同風格 */
+.item img {
+	width: 140px;
+	height: 140px;
+	object-fit: cover;
+	border-radius: 10px;
+	display: block;
+	margin: 0 auto 10px auto;
+}
+
+.item-name {
+	font-size: 15px;
+	height: 40px;
+	overflow: hidden;
+	margin-bottom: 8px;
+}
+
+/* 查看按鈕 */
+.item a {
+	display: inline-block;
+	padding: 6px 10px;
+	background: black;
+	color: white;
+	border-radius: 8px;
+	text-decoration: none;
+	font-size: 14px;
+	transition: 0.2s;
+}
+
+.item a:hover {
+	background: #333;
+}
+
+/* Footer */
+footer {
+	text-align: center;
+	padding: 20px;
+	margin-top: 40px;
+	font-size: 14px;
+	color: #777;
+	border-top: 1px solid #eee;
+}
+</style>
+</head>
+<body>
+<!-- 導覽列 -->
+<nav>
+	<div class="nav-container">
+		<div class="logo">GoodDeal</div>
+		<div class="hamburger" onclick="toggleMenu()">☰</div>
+		<ul class="nav-links" id="navMenu">
+			<li><a href="index.html">首頁</a></li>
+			<li><a href="#hot">熱門商品</a></li>
+			<li><a href="#fav">我的收藏</a></li>
+			<li><a href="#login">登入</a></li>
+		</ul>
+	</div>
+</nav>
+
+<section class="hero">
+	<h2>搜尋結果</h2>
+	<div class="search-box">
+		<input id="keyword" type="text" placeholder="輸入商品名稱" />
+		<button onclick="goSearch()">搜尋</button>
+	</div>
+</section>
+
+<ul id="resultList"></ul>
+
+<footer> © 2025 商品比價平台 GoodDeal </footer>
+
+<script src="js/api.js"></script>
+<script>
+function toggleMenu() {
+	document.getElementById("navMenu").classList.toggle("active");
+}
+
+function getQueryParam(name) {
+	return new URLSearchParams(window.location.search).get(name);
+}
+
+function goSearch() {
+    const key = document.getElementById("keyword").value;
+    window.location.href = `search.html?q=${encodeURIComponent(key)}`;
+}
+
+function renderResults(products) {
+	let html = "";
+	products.forEach(p => {
+	    html += `
+	      <li class="item">
+	        <img src="${p.imageUrl || 'assets/placeholder.png'}" />
+	        <div class="item-name">${p.productName}</div>
+	        <a href="product.html?id=${p.productId}">查看</a>
+	      </li>
+	    `;
+	});
+	document.getElementById("resultList").innerHTML = html;
+}
+
+//條碼搜尋
+async function checkBarcodeSearch() {
+	const barcode = getQueryParam("barcode");
+	if (!barcode) return;
+	const res = await fetch(`/api/products/barcode?code=${barcode}`);
+	const list = await res.json();
+	renderResults(list);
+}
+
+checkBarcodeSearch();
+		  
+//只有沒有 barcode 才執行文字搜尋
+if (!getQueryParam("barcode")) {
+  loadResults();
+}  
+    
+async function loadResults() {
+	const key = getQueryParam("q") || "";
+	document.getElementById("keyword").value = key;
+	const products = await apiGet(`/products/search?keyword=${encodeURIComponent(key)}`);
+	renderResults(products);
+}
+</script>
+</body>
+</html>
