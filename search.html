@@ -3,27 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>搜尋結果</title>
+<title>GoodDeal｜商品比價平台</title>
 
 <style>
 body {
 	font-family: "Microsoft JhengHei", sans-serif;
-	background: #ffffff;
 	margin: 0;
-	padding: 0;
+	background: #fff;
 	color: #333;
 }
 
-/* 導覽列 */
+/* Nav */
 nav {
-	width: 100%;
-	background: #fff;
 	border-bottom: 1px solid #eee;
 	position: sticky;
 	top: 0;
+	background: #fff;
 	z-index: 100;
 }
-
 .nav-container {
 	max-width: 1100px;
 	margin: auto;
@@ -32,24 +29,20 @@ nav {
 	justify-content: space-between;
 	align-items: center;
 }
-
 .logo {
 	font-size: 22px;
 	font-weight: bold;
 }
-
 .nav-links {
-	display: flex;
-	gap: 24px;
 	list-style: none;
+	display: flex;
+	gap: 20px;
 	margin: 0;
 	padding: 0;
 }
-
 .nav-links a {
 	text-decoration: none;
 	color: #333;
-	font-size: 16px;
 }
 
 /* 手機選單 */
@@ -78,126 +71,93 @@ nav {
 	.hamburger {
 		display: block;
 	}
-	#resultList {
-		grid-template-columns: repeat(2, 1fr);
-	}
 }
 
-/* Hero 區 */
+/* Hero */
 .hero {
-	text-align: center;
-	padding: 20px 20px;
 	background: #f7f7f7;
-}
-
-.hero h2 {
+	padding: 20px;
 	text-align: center;
-	font-size: 26px;
-	margin-bottom: 20px;
-	font-weight: bold;
 }
-
-/* Search Bar — 與首頁一致 */
 .search-box {
-	margin: 0 auto;
-	margin-top: 20px;
+	max-width: 480px;
+	margin: auto;
 	display: flex;
 	gap: 10px;
-	max-width: 480px;
-	padding: 0 20px;
 }
-
 .search-box input {
 	flex: 1;
 	padding: 14px;
-	border: 1px solid #ccc;
 	border-radius: 10px;
-	font-size: 16px;
+	border: 1px solid #ccc;
 }
-
 .search-box button {
 	padding: 14px 20px;
 	border: none;
+	border-radius: 10px;
 	background: black;
 	color: white;
-	border-radius: 10px;
 	cursor: pointer;
-	font-size: 16px;
-	transition: 0.2s;
 }
 
-.search-box button:hover {
-	background: #333;
-}
-
-/* 商品結果區塊卡片 — 改成跟首頁一樣的卡片風格 */
+/* Result */
 #resultList {
-	list-style: none;
+	max-width: 1000px;
+	margin: 30px auto;
 	padding: 0;
-	margin: 20px auto;
+	list-style: none;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 	gap: 20px;
-	max-width: 1000px;
 }
-
 .item {
 	background: white;
-	padding: 16px;
 	border-radius: 14px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+	padding: 16px;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 	text-align: center;
 }
-
-/* 商品圖片固定尺寸 — 與首頁熱門商品同風格 */
 .item img {
 	width: 140px;
 	height: 140px;
 	object-fit: cover;
 	border-radius: 10px;
-	display: block;
-	margin: 0 auto 10px auto;
+	margin-bottom: 10px;
 }
-
 .item-name {
 	font-size: 15px;
 	height: 40px;
 	overflow: hidden;
-	margin-bottom: 8px;
 }
-
-/* 查看按鈕 */
+.price {
+	color: #d32f2f;
+	font-weight: bold;
+	margin-top: 6px;
+}
 .item a {
 	display: inline-block;
+	margin-top: 8px;
 	padding: 6px 10px;
 	background: black;
 	color: white;
 	border-radius: 8px;
 	text-decoration: none;
 	font-size: 14px;
-	transition: 0.2s;
 }
-
-.item a:hover {
-	background: #333;
-}
-
-/* Footer */
 footer {
 	text-align: center;
 	padding: 20px;
-	margin-top: 40px;
-	font-size: 14px;
-	color: #777;
 	border-top: 1px solid #eee;
+	color: #777;
 }
 </style>
 </head>
+
 <body>
-<!-- 導覽列 -->
+
 <nav>
 	<div class="nav-container">
-		<div class="logo">GoodDeal</div>
+		<div class="logo">GoodDeal｜商品比價平台</div>
 		<div class="hamburger" onclick="toggleMenu()">☰</div>
 		<ul class="nav-links" id="navMenu">
 			<li><a href="index.html">首頁</a></li>
@@ -211,110 +171,115 @@ footer {
 <section class="hero">
 	<h2>搜尋結果</h2>
 	<div class="search-box">
-		<input id="keyword" type="text" placeholder="輸入商品名稱" />
+		<input id="keyword" placeholder="輸入商品名稱或條碼" />
 		<button onclick="goSearch()">搜尋</button>
 	</div>
 </section>
 
 <ul id="resultList"></ul>
 
-<footer> © 2025 商品比價平台 GoodDeal </footer>
+<footer>© 2025 商品比價平台 GoodDeal </footer>
 
 <script src="js/api.js"></script>
 <script>
 function toggleMenu() {
     document.getElementById("navMenu").classList.toggle("active");
 }
+/* ========================
+   工具
+======================== */
+const $ = id => document.getElementById(id);
+const qs = key => new URLSearchParams(location.search).get(key);
 
-function getQueryParam(name) {
-    return new URLSearchParams(window.location.search).get(name);
-}
-
+/* ========================
+   搜尋入口
+======================== */
 function goSearch() {
-    const key = document.getElementById("keyword").value.trim();
+	const key = $("keyword").value.trim();
+	if (!key) return;
 
-    if (!key) return;
-
-    // ✔️ 若為條碼格式（純數字 & 長度 8~20）
-    if (/^\d{8,20}$/.test(key)) {
-        window.location.href = `search.html?barcode=${encodeURIComponent(key)}`;
-    } else {
-        window.location.href = `search.html?q=${encodeURIComponent(key)}`;
-    }
+	if (/^\d{8,20}$/.test(key)) {
+		location.href = `search.html?barcode=${key}`;
+	} else {
+		location.href = `search.html?q=${encodeURIComponent(key)}`;
+	}
 }
 
-function renderResults(products) {
-    if (!products || products.length === 0) {
-        document.getElementById("resultList").innerHTML = `<li>查無相關商品</li>`;
-        return;
-    }
+/* ========================
+   Render：商品
+======================== */
+function renderProducts(list) {
+	if (!list || list.length === 0) {
+		$("resultList").innerHTML = "<li>查無商品</li>";
+		return;
+	}
 
-    let html = "";
-    products.forEach(pp => {
-        const p = pp.product;
-        html += `
-          <li class="item">
-            <img src="${p.imageUrl || 'assets/placeholder.png'}" />
-            <div class="item-name">${p.brand}${p.productName}</div>
-            <a href="product.html?id=${p.productId}">查看</a>
-          </li>
-        `;
-    });
-
-    document.getElementById("resultList").innerHTML = html;
+	$("resultList").innerHTML = list.map(p => `
+		<li class="item">
+			<img src="${p.imageUrl || 'assets/placeholder.png'}">
+			<div class="item-name">${p.brand || ""}${p.productName}</div>
+			<a href="product.html?id=${p.productId}">查看</a>
+		</li>
+	`).join("");
 }
 
-/* --------------------------
-   ✔️ 條碼搜尋（加防呆）
----------------------------*/
-async function checkBarcodeSearch() {
-    const barcode = getQueryParam("barcode");
-    if (!barcode) return false;
+/* ========================
+   Render：商店 / 比價
+======================== */
+function renderPriceGroup(list) {
+	if (!list || list.length === 0) {
+		$("resultList").innerHTML = "<li>此商店無商品</li>";
+		return;
+	}
 
-    try {
-        const res = await fetch(`/api/products/barcode?code=${barcode}`);
-        const list = await res.json();
-
-        renderResults(list);
-        return true;   // 告訴主程式：已成功處理條碼搜尋
-    } catch (e) {
-        document.getElementById("resultList").innerHTML = `<li>條碼搜尋失敗</li>`;
-        return true;
-    }
+	$("resultList").innerHTML = list.map(item => {
+		const p = item.product;
+		return `
+			<li class="item">
+				<img src="${p.imageUrl || 'assets/placeholder.png'}">
+				<div class="item-name">${p.brand || ""}${p.productName}</div>
+				<a href="product.html?id=${p.productId}">查看</a>
+			</li>
+		`;
+	}).join("");
 }
 
-/* --------------------------
-   ✔️ 主流程（避免重複搜尋）
----------------------------*/
-(async function () {
+/* ========================
+   主流程（不衝突）
+======================== */
+(async function init() {
 
-	// 條碼搜尋優先
-    const handled = await checkBarcodeSearch();
-    if (handled) return;   // 若條碼搜尋已處理 → 不跑文字搜尋
+	// 1️⃣ 條碼
+	const barcode = qs("barcode");
+	if (barcode) {
+		const list = await apiGet(`/products/barcode?code=${barcode}`);
+		renderProducts(list);
+		return;
+	}
 
- 	// 分類搜尋
-    const catId = getQueryParam("cat");
-    if (catId) {
-        const list = await apiGet(`/products/category/${catId}`);
-        renderResults(list);
-        return; // 重要：避免跑到文字搜尋
-    }
-    
-    /* ------ 文字搜尋 ------ */
-    const key = getQueryParam("q") || "";
-    document.getElementById("keyword").value = key;
+	// 2️⃣ 商店
+	const store = qs("store");
+	if (store) {
+		const list = await apiGet(`/prices/group/${store}`);
+		renderPriceGroup(list);
+		return;
+	}
 
-    // 集團搜尋
-    const storeGroup = getQueryParam("store");
-    if (storeGroup) {
-        const list = await apiGet(`/prices/group/${storeGroup}`);
-        renderResults(list);
-        return;
-    }
+	// 3️⃣ 分類
+	const cat = qs("cat");
+	if (cat) {
+		const list = await apiGet(`/products/category/${cat}`);
+		renderProducts(list);
+		return;
+	}
 
-    const products = await apiGet(`/products/search?keyword=${encodeURIComponent(key)}`);
-    renderResults(products);
-
+	// 4️⃣ 關鍵字
+	const key = qs("q");
+	if (key) {
+		$("keyword").value = key;
+		const list = await apiGet(`/products/search?keyword=${encodeURIComponent(key)}`);
+		renderProducts(list);
+	}
 })();
 </script>
 

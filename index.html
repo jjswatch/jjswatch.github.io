@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>GoodDeal</title>
+<title>GoodDeal｜商品比價平台</title>
 <link rel="stylesheet" href="css/style.css" />
 
 <style>
@@ -260,7 +260,7 @@ footer {
 <!-- 導覽列 -->
 <nav>
 	<div class="nav-container">
-		<div class="logo">GoodDeal</div>
+		<div class="logo">GoodDeal｜商品比價平台</div>
 		<div class="hamburger" onclick="toggleMenu()">☰</div>
 		<ul class="nav-links" id="navMenu">
 			<li><a href="index.html">首頁</a></li>
@@ -308,10 +308,7 @@ footer {
 <!-- 分類標籤區 -->
 <h2 class="section-title">🏬 分類搜尋</h2>
 <section style="padding: 20px; max-width: 1100px; margin: auto;">
-	<div id="category-tags" class="category-tags">
-		<div class="category-tag" data-id="1">泡麵</div>
-		<div class="category-tag" data-id="2">調味品</div>
-	</div>
+	<div id="category-tags" class="category-tags"></div>
 </section>
 
 <h2 class="section-title" id="hot">🔥 熱門商品</h2>
@@ -384,17 +381,17 @@ const stores = [
     {
         id: 1,
         name: "全聯福利中心",
-        logo: "/assets/stores/px.png"
+        logo: "assets/stores/px.png"
     },
     {
         id: 2,
         name: "家樂福",
-        logo: "/assets/stores/carrefour.png"
+        logo: "assets/stores/carrefour.png"
     },
     {
         id: 3,
         name: "愛買",
-        logo: "/assets/stores/amart.png"
+        logo: "assets/stores/amart.png"
     }
 ];
 
@@ -427,10 +424,8 @@ function goStore(storeId) {
 loadStores();
 
 function goBarcode() {
-    window.location.href = "barcode_scanner_1d.html";
+    window.location.href = "scan.html";
 }
 </script>
 </body>
-
 </html>
-

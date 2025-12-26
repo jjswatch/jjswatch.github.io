@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GoodDeal｜掃描條碼</title>
+
+<script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
+
+<style>
+body {
+	font-family: "Microsoft JhengHei", sans-serif;
+	background: #ffffff;
+	margin: 0;
+	color: #333;
+}
+
+/* 導覽列 */
+nav {
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.nav-container {
+	max-width: 1100px;
+	margin: auto;
+	padding: 12px 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+/* 主內容 */
+.main {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 20px;
+	text-align: center;
+}
+
+h2 {
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.desc {
+	color: #666;
+	font-size: 14px;
+	margin-bottom: 16px;
+}
+
+/* 掃描視窗 */
+#interactive.viewport {
+	width: 100%;
+	height: 280px;
+	border-radius: 14px;
+	overflow: hidden;
+	border: 2px solid #ddd;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+#interactive.viewport video,
+#interactive.viewport canvas {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* 狀態列 */
+#status {
+	margin-top: 16px;
+	padding: 12px;
+	border-radius: 10px;
+	background: #f7f7f7;
+	font-size: 14px;
+}
+
+/* 返回按鈕 */
+.back-btn {
+	margin-top: 20px;
+	display: inline-block;
+	padding: 10px 18px;
+	border-radius: 10px;
+	border: 1px solid #ccc;
+	text-decoration: none;
+	color: #333;
+	font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 導覽列 -->
+<nav>
+	<div class="nav-container">
+		<div class="logo">GoodDeal</div>
+	</div>
+</nav>
+
+<!-- 內容 -->
+<div class="main">
+	<h2>掃描商品條碼</h2>
+	<div class="desc">請將商品條碼對準畫面中央</div>
+
+	<div id="interactive" class="viewport"></div>
+
+	<div id="status">📷 啟動相機中…</div>
+
+	<a href="index.html" class="back-btn">返回首頁</a>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+	const status = document.getElementById("status");
+	let scanned = false;
+
+	Quagga.init({
+		inputStream: {
+			type: "LiveStream",
+			target: document.querySelector("#interactive"),
+			constraints: {
+				facingMode: "environment"
+			}
+		},
+		decoder: {
+			readers: ["ean_reader", "ean_8_reader"],
+			multiple: false
+		},
+		locator: {
+			patchSize: "medium",
+			halfSample: true
+		}
+	}, err => {
+		if (err) {
+			status.innerHTML = "❌ 無法啟動相機，請確認權限";
+			return;
+		}
+		Quagga.start();
+		status.innerHTML = "🔍 掃描中，請對準條碼";
+	});
+
+	Quagga.onDetected(data => {
+		if (scanned) return;
+
+		scanned = true;
+		const code = data.codeResult.code;
+
+		status.innerHTML = `✅ 已掃描：${code}`;
+		Quagga.stop();
+
+		// 跳轉到搜尋頁
+		setTimeout(() => {
+			window.location.href = `search.html?barcode=${code}`;
+		}, 600);
+	});
+});
+</script>
+
+</body>
+</html>
