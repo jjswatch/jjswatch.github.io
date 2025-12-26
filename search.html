@@ -254,7 +254,7 @@ function renderPriceGroup(list) {
 	// GitHub Pages → 用 mock
   if (location.hostname.includes("github.io")) {
     const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
-    renderResults(result);
+    renderProducts(result);
     return true;
   }
 	if (barcode) {
@@ -291,6 +291,7 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
+
 
 
 
