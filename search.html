@@ -214,13 +214,13 @@ function renderProducts(list) {
 		return;
 	}
 
-	$("resultList").innerHTML = list.map(p => `
+	$("resultList").innerHTML = `
 		<li class="item">
 			<img src="https://cdn-next.cybassets.com/media/W1siZiIsIjIzNDEzL3Byb2R1Y3RzLzM4NjM5NTAyLzE2Njc3OTAzNzJfNDFiYjNmNmFjNDAwNTY0M2NjYjAuanBlZyJdLFsicCIsInRodW1iIiwiNjAweDYwMCJdXQ.jpeg?sha=c37c47fd1e78d685 || 'assets/placeholder.png'}">
 			<div class="item-name">烹大師 || ""}干貝風味</div>
 			<a href="product.html?id=${p.productId}">查看</a>
 		</li>
-	`).join("");
+	`;
 }
 
 /* ========================
@@ -285,5 +285,6 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
+
 
 
