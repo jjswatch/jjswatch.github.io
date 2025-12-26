@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Good Deal</title>
+<title>GoodDeal</title>
 <link rel="stylesheet" href="css/style.css" />
 
 <style>
@@ -257,79 +257,79 @@ footer {
 </head>
 
 <body>
-	<!-- 導覽列 -->
-	<nav>
-		<div class="nav-container">
-			<div class="logo">GoodDeal</div>
-			<div class="hamburger" onclick="toggleMenu()">☰</div>
-			<ul class="nav-links" id="navMenu">
-				<li><a href="index.html">首頁</a></li>
-				<li><a href="#hot">熱門商品</a></li>
-				<li><a href="#fav">我的收藏</a></li>
-				<li><a href="#login">登入</a></li>
-			</ul>
-		</div>
-	</nav>
+<!-- 導覽列 -->
+<nav>
+	<div class="nav-container">
+		<div class="logo">GoodDeal</div>
+		<div class="hamburger" onclick="toggleMenu()">☰</div>
+		<ul class="nav-links" id="navMenu">
+			<li><a href="index.html">首頁</a></li>
+			<li><a href="#hot">熱門商品</a></li>
+			<li><a href="#fav">我的收藏</a></li>
+			<li><a href="#login">登入</a></li>
+		</ul>
+	</div>
+</nav>
 
-	<section class="hero">
-		<h1>快速找到最便宜的商品價格</h1>
-		<p>整合全台主要量販店，每日更新價格資訊，幫你省時又省錢。</p>
-		<div class="search-box">
-			<input id="keyword" type="text" placeholder="輸入商品名稱">
-			<button onclick="goSearch()">搜尋</button>
-			<button onclick="goBarcode()">條碼</button>
-		</div>
-	</section>
+<section class="hero">
+	<h1>快速找到最便宜的商品價格</h1>
+	<p>整合全台主要量販店，每日更新價格資訊，幫你省時又省錢。</p>
+	<div class="search-box">
+		<input id="keyword" type="text" placeholder="輸入商品名稱">
+		<button onclick="goSearch()">搜尋</button>
+		<button onclick="goBarcode()">條碼</button>
+	</div>
+</section>
 
-	<!--
-	<section class="features">
-		<div class="card">
-			<h3>🔍 即時搜尋</h3>
-			<p>快速查詢商品價格資訊。</p>
-		</div>
+<!--
+<section class="features">
+	<div class="card">
+		<h3>🔍 即時搜尋</h3>
+		<p>快速查詢商品價格資訊。</p>
+	</div>
 
-		<div class="card">
-			<h3>📊 價格比較</h3>
-			<p>自動比對各平台價格。</p>
-		</div>
+	<div class="card">
+		<h3>📊 價格比較</h3>
+		<p>自動比對各平台價格。</p>
+	</div>
 
-		<div class="card">
-			<h3>⭐ 收藏商品</h3>
-			<p>追蹤價格變化，不錯過降價時機。</p>
-		</div>
-	</section>
-	-->
+	<div class="card">
+		<h3>⭐ 收藏商品</h3>
+		<p>追蹤價格變化，不錯過降價時機。</p>
+	</div>
+</section>
+-->
 
-	<!-- <h2 class="section-title">🏬 店家搜尋</h2> -->
-	<section style="padding: 20px; max-width: 1100px; margin: auto;">
-		<div id="store-cards" class="store-card-container"></div>
-	</section>
+<!-- <h2 class="section-title">🏬 店家搜尋</h2> -->
+<section style="padding: 20px; max-width: 1100px; margin: auto;">
+	<div id="store-cards" class="store-card-container"></div>
+</section>
 
-	<!-- 分類標籤區 -->
-	<h2 class="section-title">🏬 分類搜尋</h2>
-	<section style="padding: 20px; max-width: 1100px; margin: auto;">
-		<div id="category-tags" class="category-tags"></div>
-	</section>
+<!-- 分類標籤區 -->
+<h2 class="section-title">🏬 分類搜尋</h2>
+<section style="padding: 20px; max-width: 1100px; margin: auto;">
+	<div id="category-tags" class="category-tags"></div>
+</section>
 
-	<h2 class="section-title" id="hot">🔥 熱門商品</h2>
-	<section class="hot-items">
-		<div class="item">
-			<img src="assets/placeholder.png" alt="商品1">
-			<p>可口可樂 2L</p>
-		</div>
-		<div class="item">
-			<img src="assets/placeholder.png" alt="商品2">
-			<p>統一布丁 6入</p>
-		</div>
-		<div class="item">
-			<img src="assets/placeholder.png" alt="商品3">
-			<p>衛生紙 家庭號</p>
-		</div>
-	</section>
+<h2 class="section-title" id="hot">🔥 熱門商品</h2>
+<section class="hot-items">
+	<div class="item">
+		<img src="assets/placeholder.png" alt="商品1">
+		<p>可口可樂 2L</p>
+	</div>
+	<div class="item">
+		<img src="assets/placeholder.png" alt="商品2">
+		<p>統一布丁 6入</p>
+	</div>
+	<div class="item">
+		<img src="assets/placeholder.png" alt="商品3">
+		<p>衛生紙 家庭號</p>
+	</div>
+</section>
 
-	<footer> © 2025 商品比價平台 GoodDeal </footer>
+<footer> © 2025 商品比價平台 GoodDeal </footer>
 
-	<script>
+<script>
 async function loadCategories() {
     const res = await fetch("/api/categories");
     const categories = await res.json();
@@ -359,10 +359,16 @@ function selectCategory(id) {
 }
 
 function goSearch() {
-    const key = document.getElementById("keyword").value;
-    const selected = document.querySelector(".category-tag.active")?.dataset.id || "";
+    const key = document.getElementById("keyword").value.trim();
 
-    window.location.href = `search.html?q=${key}&cat=${selected}`;
+    if (!key) return;
+
+    // ✔️ 若為條碼格式（純數字 & 長度 8~20）
+    if (/^\d{8,20}$/.test(key)) {
+        window.location.href = `search.html?barcode=${encodeURIComponent(key)}`;
+    } else {
+        window.location.href = `search.html?q=${encodeURIComponent(key)}`;
+    }
 }
 
 function toggleMenu() {
@@ -384,8 +390,8 @@ const stores = [
     },
     {
         id: 3,
-        name: "大潤發",
-        logo: "assets/stores/rt.png"
+        name: "愛買",
+        logo: "assets/stores/amart.png"
     }
 ];
 

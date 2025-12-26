@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>商品比價 - GoodDeal</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft JhengHei", sans-serif;
+    background: #ffffff;
+    color: #333;
+}
+
+/* 導覽列 */
+nav {
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.nav-container {
+	max-width: 1100px;
+	margin: auto;
+	padding: 12px 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.nav-links {
+	display: flex;
+	gap: 24px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-links a {
+	text-decoration: none;
+	color: #333;
+	font-size: 16px;
+}
+
+/* 商品區塊 */
+.product-header {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 14px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.product-header img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.product-info h2 {
+    margin: 0;
+}
+
+.product-info p {
+    margin: 4px 0;
+    color: #666;
+}
+
+/* 比價清單 */
+#priceList {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.price-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 12px;
+}
+
+.price-store {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.price-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #d62828;
+}
+
+.price-card a {
+    padding: 8px 14px;
+    background: black;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.price-card a:hover {
+    background: #333;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #777;
+    border-top: 1px solid #eee;
+}
+
+/* 手機選單 */
+.hamburger {
+	display: none;
+	font-size: 26px;
+	cursor: pointer;
+}
+
+@media ( max-width : 768px) {
+	.nav-links {
+		display: none;
+		flex-direction: column;
+		background: #fff;
+		position: absolute;
+		top: 60px;
+		right: 20px;
+		width: 160px;
+		border: 1px solid #eee;
+		border-radius: 10px;
+		padding: 10px;
+	}
+	.nav-links.active {
+		display: flex;
+	}
+	.hamburger {
+		display: block;
+	}
+	#resultList {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 導覽列 -->
+<nav>
+	<div class="nav-container">
+		<div class="logo">GoodDeal</div>
+		<div class="hamburger" onclick="toggleMenu()">☰</div>
+		<ul class="nav-links" id="navMenu">
+			<li><a href="index.html">首頁</a></li>
+			<li><a href="#hot">熱門商品</a></li>
+			<li><a href="#fav">我的收藏</a></li>
+			<li><a href="#login">登入</a></li>
+		</ul>
+	</div>
+</nav>
+
+<!-- 商品基本資訊 -->
+<div id="productBlock" class="product-header" style="display:none;">
+    <img id="productImg" src="">
+    <div class="product-info">
+        <h2 id="productName"></h2>
+        <p id="productBrand"></p>
+        <p id="productSpec"></p>
+    </div>
+</div>
+
+<!-- 價格列表 -->
+<div id="priceList"></div>
+
+<footer>© 2025 商品比價平台 GoodDeal</footer>
+
+<script src="js/api.js"></script>
+<script>
+function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("active");
+}
+
+function getQueryParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+}
+
+async function loadProduct() {
+    const id = getQueryParam("id");
+    if (!id) return;
+
+    const product = await apiGet(`/products/${id}`);
+
+    if (!product) return;
+
+    document.getElementById("productBlock").style.display = "flex";
+    document.getElementById("productImg").src = product.imageUrl || "assets/placeholder.png";
+    document.getElementById("productName").innerText = product.productName;
+    document.getElementById("productBrand").innerText = product.brand ? "品牌：" + product.brand : "";
+    document.getElementById("productSpec").innerText = product.spec ? "規格：" + product.spec : "";
+}
+
+async function loadPrices() {
+    const id = getQueryParam("id");
+    if (!id) return;
+
+    const prices = await apiGet(`/prices/product/${id}`);
+    const list = document.getElementById("priceList");
+
+    if (!prices || prices.length === 0) {
+        list.innerHTML = "<p style='text-align:center;color:#666;'>尚無比價資料</p>";
+        return;
+    }
+
+    prices.sort((a, b) => a.price - b.price);
+
+    list.innerHTML = prices.map(p => `
+        <div class="price-card">
+            <div class="price-store">${p.store.storeName}</div>
+            <div class="price-value">$${p.price}</div>
+            <a href="${p.url}" target="_blank">前往查看</a>
+        </div>
+    `).join("");
+}
+
+// 初始化
+loadProduct();
+loadPrices();
+</script>
+
+</body>
+</html>

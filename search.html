@@ -223,54 +223,100 @@ footer {
 <script src="js/api.js"></script>
 <script>
 function toggleMenu() {
-	document.getElementById("navMenu").classList.toggle("active");
+    document.getElementById("navMenu").classList.toggle("active");
 }
 
 function getQueryParam(name) {
-	return new URLSearchParams(window.location.search).get(name);
+    return new URLSearchParams(window.location.search).get(name);
 }
 
 function goSearch() {
-    const key = document.getElementById("keyword").value;
-    window.location.href = `search.html?q=${encodeURIComponent(key)}`;
+    const key = document.getElementById("keyword").value.trim();
+
+    if (!key) return;
+
+    // ✔️ 若為條碼格式（純數字 & 長度 8~20）
+    if (/^\d{8,20}$/.test(key)) {
+        window.location.href = `search.html?barcode=${encodeURIComponent(key)}`;
+    } else {
+        window.location.href = `search.html?q=${encodeURIComponent(key)}`;
+    }
 }
 
 function renderResults(products) {
-	let html = "";
-	products.forEach(p => {
-	    html += `
-	      <li class="item">
-	        <img src="${p.imageUrl || 'assets/placeholder.png'}" />
-	        <div class="item-name">${p.productName}</div>
-	        <a href="product.html?id=${p.productId}">查看</a>
-	      </li>
-	    `;
-	});
-	document.getElementById("resultList").innerHTML = html;
+    if (!products || products.length === 0) {
+        document.getElementById("resultList").innerHTML = `<li>查無相關商品</li>`;
+        return;
+    }
+
+    let html = "";
+    products.forEach(pp => {
+        const p = pp.product;
+        html += `
+          <li class="item">
+            <img src="${p.imageUrl || 'assets/placeholder.png'}" />
+            <div class="item-name">${p.brand}${p.productName}</div>
+            <a href="product.html?id=${p.productId}">查看</a>
+          </li>
+        `;
+    });
+
+    document.getElementById("resultList").innerHTML = html;
 }
 
-//條碼搜尋
+/* --------------------------
+   ✔️ 條碼搜尋（加防呆）
+---------------------------*/
 async function checkBarcodeSearch() {
-	const barcode = getQueryParam("barcode");
-	if (!barcode) return;
-	const res = await fetch(`/api/products/barcode?code=${barcode}`);
-	const list = await res.json();
-	renderResults(list);
+    const barcode = getQueryParam("barcode");
+    if (!barcode) return false;
+
+    try {
+        const res = await fetch(`/api/products/barcode?code=${barcode}`);
+        const list = await res.json();
+
+        renderResults(list);
+        return true;   // 告訴主程式：已成功處理條碼搜尋
+    } catch (e) {
+        document.getElementById("resultList").innerHTML = `<li>條碼搜尋失敗</li>`;
+        return true;
+    }
 }
 
-checkBarcodeSearch();
-		  
-//只有沒有 barcode 才執行文字搜尋
-if (!getQueryParam("barcode")) {
-  loadResults();
-}  
+/* --------------------------
+   ✔️ 主流程（避免重複搜尋）
+---------------------------*/
+(async function () {
+
+	// 條碼搜尋優先
+    const handled = await checkBarcodeSearch();
+    if (handled) return;   // 若條碼搜尋已處理 → 不跑文字搜尋
+
+ 	// 分類搜尋
+    const catId = getQueryParam("cat");
+    if (catId) {
+        const list = await apiGet(`/products/category/${catId}`);
+        renderResults(list);
+        return; // 重要：避免跑到文字搜尋
+    }
     
-async function loadResults() {
-	const key = getQueryParam("q") || "";
-	document.getElementById("keyword").value = key;
-	const products = await apiGet(`/products/search?keyword=${encodeURIComponent(key)}`);
-	renderResults(products);
-}
+    /* ------ 文字搜尋 ------ */
+    const key = getQueryParam("q") || "";
+    document.getElementById("keyword").value = key;
+
+    // 集團搜尋
+    const storeGroup = getQueryParam("store");
+    if (storeGroup) {
+        const list = await apiGet(`/prices/group/${storeGroup}`);
+        renderResults(list);
+        return;
+    }
+
+    const products = await apiGet(`/products/search?keyword=${encodeURIComponent(key)}`);
+    renderResults(products);
+
+})();
 </script>
+
 </body>
 </html>
