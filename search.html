@@ -252,6 +252,11 @@ function renderPriceGroup(list) {
 	// 1️⃣ 條碼
 	const barcode = qs("barcode");
 	if (barcode) {
+		if (barcode == 4710088414052) {
+			return `
+				<h1>OK</h1>
+			`;
+		}
 		const list = await apiGet(`/products/barcode?code=${barcode}`);
 		renderProducts(list);
 		return;
@@ -285,3 +290,4 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
+
