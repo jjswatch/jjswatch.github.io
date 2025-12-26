@@ -214,13 +214,13 @@ function renderProducts(list) {
 		return;
 	}
 
-	$("resultList").innerHTML = `
+	$("resultList").innerHTML = list.map(p => `
 		<li class="item">
-			<img src="https://cdn-next.cybassets.com/media/W1siZiIsIjIzNDEzL3Byb2R1Y3RzLzM4NjM5NTAyLzE2Njc3OTAzNzJfNDFiYjNmNmFjNDAwNTY0M2NjYjAuanBlZyJdLFsicCIsInRodW1iIiwiNjAweDYwMCJdXQ.jpeg?sha=c37c47fd1e78d685 || 'assets/placeholder.png'}">
-			<div class="item-name">烹大師 || ""}干貝風味</div>
+			<img src="${p.imageUrl || 'assets/placeholder.png'}">
+			<div class="item-name">${p.brand || ""}${p.productName}</div>
 			<a href="product.html?id=${p.productId}">查看</a>
 		</li>
-	`;
+	`).join("");
 }
 
 /* ========================
@@ -251,6 +251,12 @@ function renderPriceGroup(list) {
 
 	// 1️⃣ 條碼
 	const barcode = qs("barcode");
+	// GitHub Pages → 用 mock
+  if (location.hostname.includes("github.io")) {
+    const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
+    renderResults(result);
+    return true;
+  }
 	if (barcode) {
 		const list = await apiGet(`/products/barcode?code=${barcode}`);
 		renderProducts(list);
@@ -285,6 +291,7 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
+
 
 
 
