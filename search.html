@@ -6,6 +6,7 @@
 <title>GoodDeal｜商品比價平台</title>
 <!-- PWA 註冊 -->
 <link rel="manifest" href="manifest.json">
+<script src="/js/mock-products.js"></script>
 <style>
 body {
 	font-family: "Microsoft JhengHei", sans-serif;
@@ -193,7 +194,6 @@ footer {
 	<ul id="resultList"></ul>
 
 	<footer>© 2025 商品比價平台 GoodDeal </footer>
-	<script src="/js/mock-products.js"></script>
 	<script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -315,4 +315,5 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
+
 
