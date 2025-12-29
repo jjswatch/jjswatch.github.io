@@ -261,6 +261,14 @@ function renderPriceGroup(list) {
 
 	// 1️⃣ 條碼
 	const barcode = qs("barcode");
+
+	// GitHub Pages → 用 mock
+    if (location.hostname.includes("github.io")) {
+    	const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
+    	renderResults(result);
+    	return true;
+  	}
+	
 	if (barcode) {
 		const list = await apiGet(`/products/barcode?code=${barcode}`);
 		renderProducts(list);
@@ -295,3 +303,4 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
+
