@@ -22,6 +22,7 @@ nav {
 	background: #fff;
 	z-index: 100;
 }
+
 .nav-container {
 	max-width: 1100px;
 	margin: auto;
@@ -30,10 +31,12 @@ nav {
 	justify-content: space-between;
 	align-items: center;
 }
+
 .logo {
 	font-size: 22px;
 	font-weight: bold;
 }
+
 .nav-links {
 	list-style: none;
 	display: flex;
@@ -41,6 +44,7 @@ nav {
 	margin: 0;
 	padding: 0;
 }
+
 .nav-links a {
 	text-decoration: none;
 	color: #333;
@@ -80,18 +84,21 @@ nav {
 	padding: 20px;
 	text-align: center;
 }
+
 .search-box {
 	max-width: 480px;
 	margin: auto;
 	display: flex;
 	gap: 10px;
 }
+
 .search-box input {
 	flex: 1;
 	padding: 14px;
 	border-radius: 10px;
 	border: 1px solid #ccc;
 }
+
 .search-box button {
 	padding: 14px 20px;
 	border: none;
@@ -111,13 +118,15 @@ nav {
 	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 	gap: 20px;
 }
+
 .item {
 	background: white;
 	border-radius: 14px;
 	padding: 16px;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 	text-align: center;
 }
+
 .item img {
 	width: 140px;
 	height: 140px;
@@ -125,16 +134,19 @@ nav {
 	border-radius: 10px;
 	margin-bottom: 10px;
 }
+
 .item-name {
 	font-size: 15px;
 	height: 40px;
 	overflow: hidden;
 }
+
 .price {
 	color: #d32f2f;
 	font-weight: bold;
 	margin-top: 6px;
 }
+
 .item a {
 	display: inline-block;
 	margin-top: 8px;
@@ -145,6 +157,7 @@ nav {
 	text-decoration: none;
 	font-size: 14px;
 }
+
 footer {
 	text-align: center;
 	padding: 20px;
@@ -156,31 +169,32 @@ footer {
 
 <body>
 
-<nav>
-	<div class="nav-container">
-		<div class="logo">GoodDeal｜商品比價平台</div>
-		<div class="hamburger" onclick="toggleMenu()">☰</div>
-		<ul class="nav-links" id="navMenu">
-			<li><a href="index.html">首頁</a></li>
-			<li><a href="#hot">熱門商品</a></li>
-			<li><a href="#fav">我的收藏</a></li>
-			<li><a href="#login">登入</a></li>
-		</ul>
-	</div>
-</nav>
+	<nav>
+		<div class="nav-container">
+			<div class="logo">GoodDeal｜商品比價平台</div>
+			<div class="hamburger" onclick="toggleMenu()">☰</div>
+			<ul class="nav-links" id="navMenu">
+				<li><a href="index.html">首頁</a></li>
+				<li><a href="#hot">熱門商品</a></li>
+				<li><a href="#fav">我的收藏</a></li>
+				<li><a href="#login">登入</a></li>
+			</ul>
+		</div>
+	</nav>
 
-<section class="hero">
-	<h2>搜尋結果</h2>
-	<div class="search-box">
-		<input id="keyword" placeholder="輸入商品名稱或條碼" />
-		<button onclick="goSearch()">搜尋</button>
-	</div>
-</section>
+	<section class="hero">
+		<h2>搜尋結果</h2>
+		<div class="search-box">
+			<input id="keyword" placeholder="輸入商品名稱或條碼" />
+			<button onclick="goSearch()">搜尋</button>
+		</div>
+	</section>
 
-<ul id="resultList"></ul>
+	<ul id="resultList"></ul>
 
-<footer>© 2025 商品比價平台 GoodDeal </footer>
-<script>
+	<footer>© 2025 商品比價平台 GoodDeal </footer>
+	<script src="/js/mock-products.js"></script>
+	<script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
@@ -190,8 +204,8 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-<script src="js/api.js"></script>
-<script>
+	<script src="js/api.js"></script>
+	<script>
 function toggleMenu() {
     document.getElementById("navMenu").classList.toggle("active");
 }
@@ -263,11 +277,11 @@ function renderPriceGroup(list) {
 	const barcode = qs("barcode");
 	if (barcode) {
 		// GitHub Pages → 用 mock
-    	if (location.hostname.includes("github.io")) {
-    		const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
-    		renderResults(result);
-    		return true;
-  		}
+		if (location.hostname.includes("github.io")) {
+			const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
+		    renderResults(result);
+		    return true;
+		}
 		const list = await apiGet(`/products/barcode?code=${barcode}`);
 		renderProducts(list);
 		return;
@@ -301,5 +315,3 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
-
-
