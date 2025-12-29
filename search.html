@@ -6,7 +6,6 @@
 <title>GoodDeal｜商品比價平台</title>
 <!-- PWA 註冊 -->
 <link rel="manifest" href="manifest.json">
-<script src="/js/mock-products.js"></script>
 <style>
 body {
 	font-family: "Microsoft JhengHei", sans-serif;
@@ -194,6 +193,7 @@ footer {
 	<ul id="resultList"></ul>
 
 	<footer>© 2025 商品比價平台 GoodDeal </footer>
+	<script src="js/mock-products.js"></script>
 	<script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -275,13 +275,13 @@ function renderPriceGroup(list) {
 
 	// 1️⃣ 條碼
 	const barcode = qs("barcode");
-	// GitHub Pages → 用 mock
-	if (location.hostname.includes("github.io")) {
-		const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
-		renderResults(result);
-		return true;
-	}
 	if (barcode) {
+		// GitHub Pages → 用 mock
+		if (location.hostname.includes("github.io")) {
+			const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
+		    renderProducts(result);
+		    return true;
+		}
 		const list = await apiGet(`/products/barcode?code=${barcode}`);
 		renderProducts(list);
 		return;
@@ -315,5 +315,3 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
-
-
