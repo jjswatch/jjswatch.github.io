@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>GoodDeal｜商品比價平台</title>
 <link rel="stylesheet" href="css/style.css" />
-
+<!-- PWA 註冊 -->
+<link rel="manifest" href="manifest.json">
 <style>
 body {
 	margin: 0;
@@ -328,7 +329,16 @@ footer {
 </section>
 
 <footer> © 2025 商品比價平台 GoodDeal </footer>
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(() => console.log("✅ Service Worker 已註冊"))
+      .catch(err => console.error("❌ SW 註冊失敗", err));
+  });
+}
+</script>
 <script>
 async function loadCategories() {
     const res = await fetch("/api/categories");

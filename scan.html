@@ -39,6 +39,48 @@ nav {
 	font-weight: bold;
 }
 
+.nav-links {
+	display: flex;
+	gap: 24px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-links a {
+	text-decoration: none;
+	color: #333;
+	font-size: 16px;
+}
+
+/* 手機選單 */
+.hamburger {
+	display: none;
+	font-size: 26px;
+	cursor: pointer;
+}
+
+@media ( max-width : 768px) {
+	.nav-links {
+		display: none;
+		flex-direction: column;
+		background: #fff;
+		position: absolute;
+		top: 60px;
+		right: 20px;
+		width: 160px;
+		border: 1px solid #eee;
+		border-radius: 10px;
+		padding: 10px;
+	}
+	.nav-links.active {
+		display: flex;
+	}
+	.hamburger {
+		display: block;
+	}
+}
+
 /* 主內容 */
 .main {
 	max-width: 600px;
@@ -95,6 +137,16 @@ h2 {
 	color: #333;
 	font-size: 14px;
 }
+
+/* Footer */
+footer {
+	text-align: center;
+	padding: 20px;
+	margin-top: 40px;
+	font-size: 14px;
+	color: #777;
+	border-top: 1px solid #eee;
+}
 </style>
 </head>
 
@@ -103,7 +155,14 @@ h2 {
 <!-- 導覽列 -->
 <nav>
 	<div class="nav-container">
-		<div class="logo">GoodDeal</div>
+		<div class="logo">GoodDeal｜商品比價平台</div>
+		<div class="hamburger" onclick="toggleMenu()">☰</div>
+		<ul class="nav-links" id="navMenu">
+			<li><a href="index.html">首頁</a></li>
+			<li><a href="#hot">熱門商品</a></li>
+			<li><a href="#fav">我的收藏</a></li>
+			<li><a href="#login">登入</a></li>
+		</ul>
 	</div>
 </nav>
 
@@ -119,7 +178,13 @@ h2 {
 	<a href="index.html" class="back-btn">返回首頁</a>
 </div>
 
+<footer> © 2025 商品比價平台 GoodDeal </footer>
+
 <script>
+function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("active");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
 	const status = document.getElementById("status");
@@ -169,5 +234,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
-

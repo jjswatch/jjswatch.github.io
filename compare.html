@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>商品比價 - GoodDeal</title>
-
+<title>GoodDeal｜商品比價平台</title>
+<!-- PWA 註冊 -->
+<link rel="manifest" href="manifest.json">
 <style>
 body {
     margin: 0;
@@ -169,7 +170,7 @@ footer {
 <!-- 導覽列 -->
 <nav>
 	<div class="nav-container">
-		<div class="logo">GoodDeal</div>
+		<div class="logo">GoodDeal｜商品比價平台</div>
 		<div class="hamburger" onclick="toggleMenu()">☰</div>
 		<ul class="nav-links" id="navMenu">
 			<li><a href="index.html">首頁</a></li>
@@ -194,7 +195,16 @@ footer {
 <div id="priceList"></div>
 
 <footer>© 2025 商品比價平台 GoodDeal</footer>
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(() => console.log("✅ Service Worker 已註冊"))
+      .catch(err => console.error("❌ SW 註冊失敗", err));
+  });
+}
+</script>
 <script src="js/api.js"></script>
 <script>
 function toggleMenu() {

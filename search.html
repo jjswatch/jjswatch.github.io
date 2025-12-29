@@ -4,7 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>GoodDeal｜商品比價平台</title>
-
+<!-- PWA 註冊 -->
+<link rel="manifest" href="manifest.json">
 <style>
 body {
 	font-family: "Microsoft JhengHei", sans-serif;
@@ -179,9 +180,17 @@ footer {
 <ul id="resultList"></ul>
 
 <footer>© 2025 商品比價平台 GoodDeal </footer>
-
-<script src="/js/api.js"></script>
-<script src="/js/mock-products.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(() => console.log("✅ Service Worker 已註冊"))
+      .catch(err => console.error("❌ SW 註冊失敗", err));
+  });
+}
+</script>
+<script src="js/api.js"></script>
 <script>
 function toggleMenu() {
     document.getElementById("navMenu").classList.toggle("active");
@@ -252,12 +261,6 @@ function renderPriceGroup(list) {
 
 	// 1️⃣ 條碼
 	const barcode = qs("barcode");
-	// GitHub Pages → 用 mock
-  if (location.hostname.includes("github.io")) {
-    const result = MOCK_PRODUCTS.filter(p => p.barcode === barcode);
-    renderProducts(result);
-    return true;
-  }
 	if (barcode) {
 		const list = await apiGet(`/products/barcode?code=${barcode}`);
 		renderProducts(list);
@@ -292,9 +295,3 @@ function renderPriceGroup(list) {
 
 </body>
 </html>
-
-
-
-
-
-
