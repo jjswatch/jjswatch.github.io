@@ -39,6 +39,18 @@ nav {
 	font-weight: bold;
 }
 
+/* Hero */
+.hero {
+	background: #f7f7f7;
+	padding: 24px 20px;
+	text-align: center;
+}
+
+.hero h2 {
+	margin: 0;
+	font-size: 24px;
+}
+
 .nav-links {
 	display: flex;
 	gap: 24px;
@@ -158,17 +170,20 @@ footer {
 		<div class="logo">GoodDeal｜商品比價平台</div>
 		<div class="hamburger" onclick="toggleMenu()">☰</div>
 		<ul class="nav-links" id="navMenu">
+			<li><span id="navUser"></span></li>
 			<li><a href="index.html">首頁</a></li>
-			<li><a href="#hot">熱門商品</a></li>
-			<li><a href="#fav">我的收藏</a></li>
-			<li><a href="#login">登入</a></li>
+			<li id="navLogin"><a href="login.html">登入</a></li>
+			<li id="navLogout"><a href="#" onclick="logout()">登出</a></li>
 		</ul>
 	</div>
 </nav>
 
+<section class="hero">
+	<h2>掃描商品條碼</h2>
+</section>
+
 <!-- 內容 -->
 <div class="main">
-	<h2>掃描商品條碼</h2>
 	<div class="desc">請將商品條碼對準畫面中央</div>
 
 	<div id="interactive" class="viewport"></div>
@@ -180,6 +195,17 @@ footer {
 
 <footer> © 2025 商品比價平台 GoodDeal </footer>
 
+<script src="js/auth.js"></script>
+<script>
+const user = getCurrentUser();
+
+if (user) {
+  navUser.textContent = `你好，${user.username}`;
+  navLogin.style.display = "none";
+} else {
+  navLogout.style.display = "none";
+}
+</script>
 <script>
 function toggleMenu() {
     document.getElementById("navMenu").classList.toggle("active");
