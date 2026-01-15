@@ -87,10 +87,7 @@
           if (/^https?:\/\//.test(result.getText())) {
             window.location.href = result.getText();
           }
-          // 延遲 2 秒後跳轉
-            setTimeout(() => {
-              window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
-            }, 2000);
+          window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
         }
       });
     }
