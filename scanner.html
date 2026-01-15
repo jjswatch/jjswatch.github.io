@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>ZXing 條碼掃描範例</title>
-  <!-- 引入 ZXing JS CDN -->
+  <!-- 使用 CDN 引入 ZXing -->
   <script src="https://unpkg.com/@zxing/library@latest"></script>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin-top: 30px; }
@@ -23,8 +23,8 @@
       const resultElement = document.getElementById('result');
 
       try {
-        // 取得可用的攝影機
-        const devices = await ZXing.BrowserMultiFormatReader.listVideoInputDevices();
+        // 取得可用的攝影機（注意：這裡要用 codeReader.listVideoInputDevices）
+        const devices = await codeReader.listVideoInputDevices();
         if (devices.length === 0) {
           resultElement.textContent = '找不到攝影機裝置';
           return;
