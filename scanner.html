@@ -1,25 +1,42 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Instascan</title>
-    <script type="text/javascript" src="js/instascan.min.js"></script>
-  </head>
-  <body>
-    <video id="preview"></video>
-    <script type="text/javascript">
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-      scanner.addListener('scan', function (content) {
-        console.log(content);
-      });
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-        } else {
-          console.error('No cameras found.');
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>ZXing 條碼掃描範例</title>
+  <script type="module">
+    import { BrowserMultiFormatReader } from '@zxing/browser';
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const codeReader = new BrowserMultiFormatReader();
+      const videoElement = document.getElementById('video');
+      const resultElement = document.getElementById('result');
+
+      try {
+        // 取得可用的攝影機
+        const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+        if (devices.length === 0) {
+          resultElement.textContent = '找不到攝影機裝置';
+          return;
         }
-      }).catch(function (e) {
-        console.error(e);
-      });
-    </script>
-  </body>
+
+        // 使用第一個攝影機
+        const selectedDeviceId = devices[0].deviceId;
+
+        // 開始掃描並即時顯示結果
+        codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
+          if (result) {
+            resultElement.textContent = `掃描結果：${result.getText()}`;
+          }
+        });
+      } catch (error) {
+        resultElement.textContent = '初始化失敗：' + error;
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>ZXing 條碼掃描範例</h1>
+  <video id="video" width="300" height="200" style="border:1px solid black" autoplay></video>
+  <p id="result">請將條碼或 QR Code 對準鏡頭</p>
+</body>
 </html>
