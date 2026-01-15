@@ -81,11 +81,16 @@
       const selectedDeviceId = devices[currentDeviceIndex].deviceId;
       codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
         if (result) {
+          const text = result.getText();
           resultElement.textContent = `掃描結果：${result.getText()}`;
           // 如果掃描到的是網址，自動跳轉
           if (/^https?:\/\//.test(result.getText())) {
             window.location.href = result.getText();
           }
+          // 延遲 2 秒後跳轉
+            setTimeout(() => {
+              window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
+            }, 2000);
         }
       });
     }
