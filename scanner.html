@@ -34,27 +34,13 @@
       color: #333;
       word-wrap: break-word;
     }
-    button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #45a049;
-    }
   </style>
 </head>
 <body>
   <header>📷 條碼掃描器</header>
   <video id="video" autoplay playsinline></video>
   <p id="result">請將條碼或 QR Code 對準鏡頭</p>
-  <button onclick="switchCamera()">切換鏡頭</button>
-
+  
   <script>
     let codeReader;
     let currentDeviceIndex = 0;
@@ -82,25 +68,10 @@
       codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
         if (result) {
         	const text = result.getText();
-        	const format = result.getBarcodeFormat(); // 取得條碼格式
-        	if (format.startsWith("EAN")) {
-                resultElement.textContent = `掃描到 EAN 條碼：${text}`;
-                window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
-              } else {
-                resultElement.textContent = `非 EAN 條碼（格式：${format}）`;
-              }
+        	resultElement.textContent = `掃描結果：${result.getText()}`;
+            window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
         }
       });
-    }
-
-    function switchCamera() {
-      if (devices.length > 1) {
-        currentDeviceIndex = (currentDeviceIndex + 1) % devices.length;
-        codeReader.reset();
-        const videoElement = document.getElementById('video');
-        const resultElement = document.getElementById('result');
-        startScan(videoElement, resultElement);
-      }
     }
 
     window.addEventListener('load', initScanner);
