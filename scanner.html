@@ -3,17 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <title>ZXing 條碼掃描範例</title>
-  <script type="module">
-    import { BrowserMultiFormatReader } from '@zxing/browser';
+  <!-- 引入 ZXing JS CDN -->
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 30px; }
+    video { border: 1px solid black; }
+    #result { font-size: 18px; margin-top: 15px; color: darkblue; }
+  </style>
+</head>
+<body>
+  <h1>ZXing 條碼掃描範例</h1>
+  <video id="video" width="300" height="200" autoplay></video>
+  <p id="result">請將條碼或 QR Code 對準鏡頭</p>
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      const codeReader = new BrowserMultiFormatReader();
+  <script>
+    window.addEventListener('load', async () => {
+      const codeReader = new ZXing.BrowserMultiFormatReader();
       const videoElement = document.getElementById('video');
       const resultElement = document.getElementById('result');
 
       try {
         // 取得可用的攝影機
-        const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+        const devices = await ZXing.BrowserMultiFormatReader.listVideoInputDevices();
         if (devices.length === 0) {
           resultElement.textContent = '找不到攝影機裝置';
           return;
@@ -22,7 +33,7 @@
         // 使用第一個攝影機
         const selectedDeviceId = devices[0].deviceId;
 
-        // 開始掃描並即時顯示結果
+        // 開始掃描
         codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
           if (result) {
             resultElement.textContent = `掃描結果：${result.getText()}`;
@@ -33,10 +44,5 @@
       }
     });
   </script>
-</head>
-<body>
-  <h1>ZXing 條碼掃描範例</h1>
-  <video id="video" width="300" height="200" style="border:1px solid black" autoplay></video>
-  <p id="result">請將條碼或 QR Code 對準鏡頭</p>
 </body>
 </html>
