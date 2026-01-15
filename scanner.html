@@ -2,47 +2,105 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>ZXing 條碼掃描範例</title>
-  <!-- 使用 CDN 引入 ZXing -->
+  <title>ZXing 條碼掃描範例 (手機版)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入 ZXing JS CDN -->
   <script src="https://unpkg.com/@zxing/library@latest"></script>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 30px; }
-    video { border: 1px solid black; }
-    #result { font-size: 18px; margin-top: 15px; color: darkblue; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+    }
+    video {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    #result {
+      font-size: 18px;
+      margin: 20px;
+      color: #333;
+      word-wrap: break-word;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #45a049;
+    }
   </style>
 </head>
 <body>
-  <h1>ZXing 條碼掃描範例</h1>
-  <video id="video" width="300" height="200" autoplay></video>
+  <header>📷 條碼掃描器</header>
+  <video id="video" autoplay playsinline></video>
   <p id="result">請將條碼或 QR Code 對準鏡頭</p>
+  <button onclick="switchCamera()">切換鏡頭</button>
 
   <script>
-    window.addEventListener('load', async () => {
-      const codeReader = new ZXing.BrowserMultiFormatReader();
+    let codeReader;
+    let currentDeviceIndex = 0;
+    let devices = [];
+
+    async function initScanner() {
+      codeReader = new ZXing.BrowserMultiFormatReader();
       const videoElement = document.getElementById('video');
       const resultElement = document.getElementById('result');
 
       try {
-        // 取得可用的攝影機（注意：這裡要用 codeReader.listVideoInputDevices）
-        const devices = await codeReader.listVideoInputDevices();
+        devices = await codeReader.listVideoInputDevices();
         if (devices.length === 0) {
           resultElement.textContent = '找不到攝影機裝置';
           return;
         }
-
-        // 使用第一個攝影機
-        const selectedDeviceId = devices[0].deviceId;
-
-        // 開始掃描
-        codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
-          if (result) {
-            resultElement.textContent = `掃描結果：${result.getText()}`;
-          }
-        });
+        startScan(videoElement, resultElement);
       } catch (error) {
         resultElement.textContent = '初始化失敗：' + error;
       }
-    });
+    }
+
+    function startScan(videoElement, resultElement) {
+      const selectedDeviceId = devices[currentDeviceIndex].deviceId;
+      codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
+        if (result) {
+          resultElement.textContent = `掃描結果：${result.getText()}`;
+          // 如果掃描到的是網址，自動跳轉
+          if (/^https?:\/\//.test(result.getText())) {
+            window.location.href = result.getText();
+          }
+        }
+      });
+    }
+
+    function switchCamera() {
+      if (devices.length > 1) {
+        currentDeviceIndex = (currentDeviceIndex + 1) % devices.length;
+        codeReader.reset();
+        const videoElement = document.getElementById('video');
+        const resultElement = document.getElementById('result');
+        startScan(videoElement, resultElement);
+      }
+    }
+
+    window.addEventListener('load', initScanner);
   </script>
 </body>
 </html>
