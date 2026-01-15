@@ -81,13 +81,14 @@
       const selectedDeviceId = devices[currentDeviceIndex].deviceId;
       codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
         if (result) {
-          const text = result.getText();
-          resultElement.textContent = `掃描結果：${result.getText()}`;
-          // 如果掃描到的是網址，自動跳轉
-          if (/^https?:\/\//.test(result.getText())) {
-            window.location.href = result.getText();
-          }
-          window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
+        	const text = result.getText();
+        	const format = result.getBarcodeFormat(); // 取得條碼格式
+        	if (format.startsWith("EAN")) {
+                resultElement.textContent = `掃描到 EAN 條碼：${text}`;
+                window.location.href = `search.html?barcode=${encodeURIComponent(text)}`;
+              } else {
+                resultElement.textContent = `非 EAN 條碼（格式：${format}）`;
+              }
         }
       });
     }
