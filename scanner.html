@@ -55,52 +55,6 @@
   <p id="result">請將條碼或 QR Code 對準鏡頭</p>
   <button onclick="switchCamera()">切換鏡頭</button>
 
-  <script>
-    let codeReader;
-    let currentDeviceIndex = 0;
-    let devices = [];
-
-    async function initScanner() {
-      codeReader = new ZXing.BrowserMultiFormatReader();
-      const videoElement = document.getElementById('video');
-      const resultElement = document.getElementById('result');
-
-      try {
-        devices = await codeReader.listVideoInputDevices();
-        if (devices.length === 0) {
-          resultElement.textContent = '找不到攝影機裝置';
-          return;
-        }
-        startScan(videoElement, resultElement);
-      } catch (error) {
-        resultElement.textContent = '初始化失敗：' + error;
-      }
-    }
-
-    function startScan(videoElement, resultElement) {
-      const selectedDeviceId = devices[currentDeviceIndex].deviceId;
-      codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
-        if (result) {
-          resultElement.textContent = `掃描結果：${result.getText()}`;
-          // 如果掃描到的是網址，自動跳轉
-          if (/^https?:\/\//.test(result.getText())) {
-            window.location.href = result.getText();
-          }
-        }
-      });
-    }
-
-    function switchCamera() {
-      if (devices.length > 1) {
-        currentDeviceIndex = (currentDeviceIndex + 1) % devices.length;
-        codeReader.reset();
-        const videoElement = document.getElementById('video');
-        const resultElement = document.getElementById('result');
-        startScan(videoElement, resultElement);
-      }
-    }
-
-    window.addEventListener('load', initScanner);
-  </script>
+  <script> let codeReader; let devices = []; let currentDeviceIndex = 0; async function initScanner() { codeReader = new ZXing.BrowserMultiFormatReader(); const videoElement = document.getElementById('video'); const resultElement = document.getElementById('result'); try { devices = await codeReader.listVideoInputDevices(); if (devices.length === 0) { resultElement.textContent = '找不到攝影機裝置'; return; } startScan(videoElement, resultElement); } catch (error) { resultElement.textContent = '初始化失敗：' + error; } } function startScan(videoElement, resultElement) { const selectedDeviceId = devices[currentDeviceIndex].deviceId; codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => { if (result) { const text = result.getText(); const format = result.getBarcodeFormat(); // 取得條碼格式 // 只針對 EAN 條碼反應 if (format.startsWith("EAN")) { resultElement.textContent = `掃描到 EAN 條碼：${text}`; // 延遲 2 秒後跳轉 setTimeout(() => { window.location.href = `search.html?barcode=${encodeURIComponent(text)}`; }, 2000); } else { resultElement.textContent = `忽略非 EAN 條碼（格式：${format}）`; } } }); } window.addEventListener('load', initScanner); </script>
 </body>
 </html>
